@@ -28,7 +28,10 @@ It fetches live cricket match data from an API and displays it in a clean and in
 
 ## 📂 Project Structure
 https://niranjana-cricbuzz.streamlit.app/
-<img width="1920" height="1080" alt="Screenshot (563)" src="https://github.com/user-attachments/assets/661c25fb-ea84-4720-8faf-0c7faac959c5" />
-<img width="1920" height="1080" alt="Screenshot (562)" src="https://github.com/user-attachments/assets/fc1b5fdf-cf02-428d-9a00-6ec5e37f3744" />
+<img width="1920" height="907" alt="Screenshot (564)" src="https://github.com/user-attachments/assets/313b4295-c872-47bd-91a6-6101cb1017a3" />
+<img width="1920" height="943" alt="Screenshot (563)" src="https://github.com/user-attachments/assets/9e833d74-956b-4ddd-b650-4cc6271e4f40" />
+<img width="1920" height="919" alt="Screenshot (562)" src="https://github.com/user-attachments/assets/5e2e652b-8f0d-4117-9f94-62018aa9876c" />
+
+
 
 
