@@ -1,5 +1,3 @@
-import requests
-
 def get_live_matches():
 
     API_KEY = "ab9f8c4c75msh3e6c95d5768fba5p1c4681jsn753d5ae37a43"
@@ -11,29 +9,40 @@ def get_live_matches():
         "X-RapidAPI-Host": "cricbuzz-cricket.p.rapidapi.com"
     }
 
+    import requests
     response = requests.get(url, headers=headers)
     data = response.json()
 
     matches = []
 
-    if "typeMatches" in data:
-        for match_type in data["typeMatches"]:
-            for series in match_type.get("seriesMatches", []):
-                series_data = series.get("seriesAdWrapper", {})
-                for match in series_data.get("matches", []):
+    for match_type in data.get("typeMatches", []):
+        for series in match_type.get("seriesMatches", []):
+            series_data = series.get("seriesAdWrapper", {})
 
-                    info = match.get("matchInfo", {})
-                    score = match.get("matchScore", {})
+            for match in series_data.get("matches", []):
 
-                    team1 = info.get("team1", {}).get("teamName", "")
-                    team2 = info.get("team2", {}).get("teamName", "")
+                info = match.get("matchInfo", {})
+                score = match.get("matchScore", {})
 
-                    status = info.get("status", "")
+                team1 = info.get("team1", {}).get("teamName", "")
+                team2 = info.get("team2", {}).get("teamName", "")
 
-                    matches.append({
-                        "match_title": f"{team1} vs {team2}",
-                        "status": status,
-                        "score": []
-                    })
+                status = info.get("status", "")
+
+                score_text = ""
+
+                if "team1Score" in score:
+                    t1 = score["team1Score"].get("inngs1", {})
+                    score_text += f"{t1.get('runs','')}/{t1.get('wickets','')} "
+
+                if "team2Score" in score:
+                    t2 = score["team2Score"].get("inngs1", {})
+                    score_text += f"{t2.get('runs','')}/{t2.get('wickets','')}"
+
+                matches.append({
+                    "match_title": f"{team1} vs {team2}",
+                    "status": status,
+                    "score": score_text
+                })
 
     return {"matches": matches}
