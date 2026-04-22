@@ -1,33 +1,39 @@
-import streamlit as st
-from api.cricbuzz_api import get_live_matches
+import requests
 
-st.set_page_config(page_title="Cricbuzz LiveStats", layout="wide")
+def get_live_matches():
 
-st.title("🏏 Cricbuzz LiveStats")
+    API_KEY = "ab9f8c4c75msh3e6c95d5768fba5p1c4681jsn753d5ae37a43"
 
-if st.button("Get Live Matches"):
+    url = "https://cricbuzz-cricket.p.rapidapi.com/matches/v1/live"
 
-    data = get_live_matches()
-    matches = data.get("matches", [])
+    headers = {
+        "X-RapidAPI-Key":"ab9f8c4c75msh3e6c95d5768fba5p1c4681jsn753d5ae37a43",
+        "X-RapidAPI-Host": "cricbuzz-cricket.p.rapidapi.com"
+    }
 
-    if matches:
-        st.subheader("📊 Live Matches")
+    response = requests.get(url, headers=headers)
+    data = response.json()
 
-        for match in matches:
-            title = match.get("match_title", "")
-            status = match.get("status", "")
-            score_data = match.get("score", "")
+    matches = []
 
-            score_text = ""
+    if "typeMatches" in data:
+        for match_type in data["typeMatches"]:
+            for series in match_type.get("seriesMatches", []):
+                series_data = series.get("seriesAdWrapper", {})
+                for match in series_data.get("matches", []):
 
-            if isinstance(score_data, list):
-                for team in score_data:
-                    score_text += f"{team.get('short','')} {team.get('score','')}  "
+                    info = match.get("matchInfo", {})
+                    score = match.get("matchScore", {})
 
-            st.markdown(f"### 🏏 {title}")
-            st.write(f"**Score:** {score_text}")
-            st.write(f"**Status:** {status}")
-            st.markdown("---")
+                    team1 = info.get("team1", {}).get("teamName", "")
+                    team2 = info.get("team2", {}).get("teamName", "")
 
-    else:
-        st.warning("No live matches available")
+                    status = info.get("status", "")
+
+                    matches.append({
+                        "match_title": f"{team1} vs {team2}",
+                        "status": status,
+                        "score": []
+                    })
+
+    return {"matches": matches}
